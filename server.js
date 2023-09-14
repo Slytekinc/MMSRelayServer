@@ -84,7 +84,7 @@ const server = net.createServer((socket) => {
                         jobId: "",
                     };
                 } else if (signal !== signals[customerId][machineName].signal && 
-                    (signal === "INCYCLE" || signals[customerId][machineName].signal === "INCYCLE")) {
+                    (signal === "In Cycle" || signals[customerId][machineName].signal === "In Cycle")) {
                     // The case of different signal
                     console.log('signal', 'New Signal!');
 
