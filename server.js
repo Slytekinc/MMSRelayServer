@@ -6,6 +6,10 @@ const offlineStatus = {
     signal: "OFFLINE"
 };
 
+const SIGNAL_OFFLINE_NAME = "Offline";
+const SIGNAL_INCYCLE_NAME = "In Cycle";
+const SIGNAL_UNCATE_NAME = "Idle-Uncategorized";
+
 const socketMap = new Map();
 let signals = {};
 let ganttDataList = [];
@@ -48,13 +52,13 @@ const server = net.createServer((socket) => {
                     signals[customerId] = {};
                 }
                 
-                let signal = "Offline";
+                let signal = SIGNAL_OFFLINE_NAME;
                 let color = "#000000";
                 if (fanucSignal === "INCYCLE") {
-                    signal = "In Cycle";
+                    signal = SIGNAL_INCYCLE_NAME;
                     color = "#46c392";
                 } else if (fanucSignal === "UNCATE") {
-                    signal = "Idle-Uncategorized";
+                    signal = SIGNAL_UNCATE_NAME;
                     color = "#ff0000";
                 }
 
@@ -84,7 +88,7 @@ const server = net.createServer((socket) => {
                         jobId: "",
                     };
                 } else if (signal !== signals[customerId][machineName].signal && 
-                    (signal === "In Cycle" || signals[customerId][machineName].signal === "In Cycle")) {
+                    (signal === SIGNAL_INCYCLE_NAME || signals[customerId][machineName].signal === SIGNAL_INCYCLE_NAME)) {
                     // The case of different signal
                     console.log('signal', 'New Signal!');
 
@@ -115,9 +119,9 @@ const server = net.createServer((socket) => {
                         lastReportTime: currTimeMilis + 500,
                         color: color,
                     }    
-                } else if (currTimeMilis - signals[customerId][machineName].serverTimeMilis >= 300000) {
-                    // 5 mins passed with the same segment, report it.
-                    console.log('signal', 'Signal after 5 mins!');
+                } else if (currTimeMilis - signals[customerId][machineName].serverTimeMilis >= 180000) {
+                    // 3 mins passed with the same segment, report it.
+                    console.log('signal', 'Signal after 3 mins!');
 
                     let origianlObject = signals[customerId][machineName]
 
@@ -164,7 +168,7 @@ const server = net.createServer((socket) => {
         } else if (event === 'updateSignal') {
             const [customerId, machineName, signal, color] = eventData.split(',');
             if (signals[customerId] && signals[customerId][machineName]) {
-                if (signals[customerId][machineName].signal !== "INCYCLE") {
+                if (signals[customerId][machineName].signal !== SIGNAL_INCYCLE_NAME) {
                     // Update Signal & Color
                     signals[customerId][machineName].signal = signal;
                     signals[customerId][machineName].color = color;
