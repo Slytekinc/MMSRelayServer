@@ -133,14 +133,12 @@ const server = net.createServer((socket) => {
 
                     signals[customerId][machineName] = {
                         ...origianlObject,
-                        signal: signal,
                         deviceTimeMilis: deviceTimeMilis,
                         serverTimeMilis: currTimeMilis,
                         createdAt: createdAt,
                         timestamp: timestamp,
                         interfaceName: interfaceName,
                         lastReportTime: currTimeMilis,
-                        color: color,
                     }
                 } else {
                     console.log('signal', 'Ignore!');
